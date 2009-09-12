@@ -1,0 +1,54 @@
+/*
+ *	Copyright 2009 Isaac Truett.
+ *
+ *	Licensed under the Apache License, Version 2.0 (the "License");
+ *	you may not use this file except in compliance with the License.
+ *	You may obtain a copy of the License at
+ *
+ *		http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *	Unless required by applicable law or agreed to in writing, software
+ *	distributed under the License is distributed on an "AS IS" BASIS,
+ *	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *	See the License for the specific language governing permissions and
+ *	limitations under the License.
+ */
+package com.googlecode.simplejdbc;
+
+import java.sql.SQLException;
+import java.util.Map;
+
+import junit.framework.Assert;
+
+import org.junit.Test;
+
+/**
+ * Tests MapResultProcessor.
+ */
+public class MapResultProcessorTest extends SimpleJdbcTest {
+	/**
+	 * Test processing a result set.
+	 * 
+	 * @throws SQLException
+	 */
+	@Test
+	public void testProcessResults() throws SQLException {
+		testDataSource.setResultValue(0, "key", Integer.valueOf(1));
+		testDataSource.setResultValue(0, "value", "A");
+		testDataSource.setResultValue(1, "key", Integer.valueOf(2));
+		testDataSource.setResultValue(1, "value", "B");
+
+		final MapResultProcessor<Integer, String> processor = new MapResultProcessor<Integer, String>(
+		        new SingleIntegerProcessor("key"), new SingleStringProcessor("value"));
+
+		final QueryResult<Map<Integer, String>> queryResult = runner.query("", new Object[0],
+		        processor);
+		final Map<Integer, String> map = queryResult.getValue();
+
+		Assert.assertNotNull(queryResult);
+		Assert.assertEquals(2, queryResult.getRowCount());
+		Assert.assertNotNull(map);
+		Assert.assertEquals("A", map.get(Integer.valueOf(1)));
+		Assert.assertEquals("B", map.get(Integer.valueOf(2)));
+	}
+}
