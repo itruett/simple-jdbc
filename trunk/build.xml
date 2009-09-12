@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Copyright 2009 Isaac Truett. 
+	
+	Licensed under the Apache License,
+	Version 2.0 (the "License"); you may not use this file except in
+	compliance with the License. You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+	applicable law or agreed to in writing, software distributed under the
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+	CONDITIONS OF ANY KIND, either express or implied. See the License for
+	the specific language governing permissions and limitations under the
+	License.
+-->
+<project name="SimpleJDBC" default="emma-test">
+	<property name="build.props.file" value="build.properties" />
+	<property file="${build.props.file}" />
+	
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="out.dir" value="${basedir}/bin" />
+
+	<target name="emma-init">
+		<property name="emma.dir" value="${basedir}/lib" />
+
+		<path id="emma.lib">
+			<pathelement location="${emma.dir}/emma.jar" />
+			<pathelement location="${emma.dir}/emma_ant.jar" />
+		</path>
+
+		<taskdef resource="emma_ant.properties" classpathref="emma.lib" />
+	</target>
+	
+	<target name="junit-init">
+		<fail unless="junit.jar" message="junit.jar must be set on the command line or in ${build.props.file}" />
+		<fail unless="hamcrest.jar" message="hamcrest.jar must be set on the command line or in ${build.props.file}" />
+		<mkdir dir="${out.dir}" />
+		<path id="run.classpath">
+			<pathelement location="${out.dir}" />
+			<pathelement location="${junit.jar}" />
+			<pathelement location="${hamcrest.jar}" />
+		</path>
+	</target>
+
+	<target name="emma-test" depends="emma-init,junit-init">
+		<emmajava enabled="true" 
+				libclasspathref="emma.lib" 
+				classname="org.junit.runner.JUnitCore" 
+				classpathref="run.classpath" sourcepath="${src.dir}">
+			<filter value="com.googlecode.simplejdbc.*"/>
+			<filter excludes="com.googlecode.simplejdbc.*Test*" />
+			<html />
+			<jvmarg line="-ea" />
+			<arg line="com.googlecode.simplejdbc.SimpleJdbcTestSuite"/>
+		</emmajava>
+	</target>
+	
+	<target name="javadoc">
+		<javadoc access="protected" classpath="${out.dir}" verbose="true" destdir="javadoc">
+			<link href="http://java.sun.com/javase/7/docs/api/" />
+			<sourcepath location="${src.dir}" />
+		</javadoc>
+	</target>
+</project>
