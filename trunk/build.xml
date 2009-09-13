@@ -62,10 +62,18 @@
 
 	<target name="javadoc-init" depends="env-init">
 		<property name="javadoc.dir" value="${build.dir}/javadoc" />
+		
+		<uptodate property="javadoc.skip" targetfile="${javadoc.dir}/index.html">
+			<srcfiles dir="${src.dir}" includes="**/*.java" />
+		</uptodate>
 	</target>
 	
-	<target name="javadoc" depends="javadoc-init">
-		<javadoc access="protected" classpath="${bin.dir}" verbose="true" destdir="${javadoc.dir}">
+	<target name="javadoc" depends="javadoc-init" unless="javadoc.skip">
+		<javadoc 
+				access="protected" 
+				classpath="${bin.dir}" 
+				verbose="true" 
+				destdir="${javadoc.dir}">
 			<link href="http://java.sun.com/javase/7/docs/api/" />
 			<sourcepath location="${src.dir}" />
 		</javadoc>
