@@ -47,6 +47,7 @@ public class TestPreparedStatement implements PreparedStatement {
 	private Map<Integer, Object> boundParameters = new HashMap<Integer, Object>();
 	private TestResultSet testResultSet = new TestResultSet();
 	private boolean executeUpdateCalled = false;
+	private boolean throwException = false;
 
 	/**
 	 * @see java.sql.PreparedStatement#addBatch()
@@ -77,7 +78,11 @@ public class TestPreparedStatement implements PreparedStatement {
 	 */
 	@Override
 	public ResultSet executeQuery() throws SQLException {
-		return testResultSet;
+		if (throwException) {
+			throw new SQLException();
+		} else {
+			return testResultSet;
+		}
 	}
 
 	/**
@@ -86,7 +91,12 @@ public class TestPreparedStatement implements PreparedStatement {
 	@Override
 	public int executeUpdate() throws SQLException {
 		executeUpdateCalled = true;
-		return -1;
+
+		if (throwException) {
+			throw new SQLException();
+		} else {
+			return -1;
+		}
 	}
 
 	/**
@@ -919,5 +929,14 @@ public class TestPreparedStatement implements PreparedStatement {
 	 */
 	public boolean isExecuteUpdateCalled() {
 		return executeUpdateCalled;
+	}
+
+	/**
+	 * When set to <code>true</code> the statement will produce a {@link SQLException}.
+	 * 
+	 * @param throwException
+	 */
+	public void setThrowException(final boolean throwException) {
+		this.throwException = throwException;
 	}
 }

@@ -28,10 +28,10 @@ public class TestQueryRunner extends QueryRunner {
 	}
 
 	/**
-	 * Returns the parameter bound at the spcified index.
+	 * Returns the parameter bound at the specified index.
 	 * 
 	 * @param i
-	 * @return the parameter bound at the spcified index
+	 * @return the parameter bound at the specified index
 	 */
 	public Object getBoundParameter(int i) {
 		return ((TestConnection) getCurrentConnection()).getBoundParameter(i);

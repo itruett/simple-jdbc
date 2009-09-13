@@ -89,14 +89,18 @@ public class QueryRunner {
 	public <T> QueryResult<T> query(final String query, final Object[] queryParameters,
 	        final ResultProcessor<T> processor) throws SQLException {
 		final Connection queryConnection = getOpenConnection();
-		final PreparedStatement statement = queryConnection.prepareStatement(query);
 
-		bindParameters(queryParameters, statement);
+		try {
+			final PreparedStatement statement = queryConnection.prepareStatement(query);
 
-		final QueryResult<T> queryResult = processor.processResultSet(statement.executeQuery());
-		queryConnection.close();
+			bindParameters(queryParameters, statement);
 
-		return queryResult;
+			final QueryResult<T> queryResult = processor.processResultSet(statement.executeQuery());
+
+			return queryResult;
+		} finally {
+			queryConnection.close();
+		}
 	}
 
 	/**
@@ -109,14 +113,18 @@ public class QueryRunner {
 	 */
 	public int update(final String query, Object[] queryParameters) throws SQLException {
 		final Connection queryConnection = getOpenConnection();
-		final PreparedStatement statement = queryConnection.prepareStatement(query);
 
-		bindParameters(queryParameters, statement);
+		try {
+			final PreparedStatement statement = queryConnection.prepareStatement(query);
 
-		final int returnValue = statement.executeUpdate();
-		queryConnection.close();
+			bindParameters(queryParameters, statement);
 
-		return returnValue;
+			final int returnValue = statement.executeUpdate();
+
+			return returnValue;
+		} finally {
+			queryConnection.close();
+		}
 	}
 
 	/**
