@@ -27,7 +27,7 @@ import java.util.Map;
  * @param <K>
  * @param <V>
  */
-public class MapResultProcessor<K, V> extends AbstractResultProcessor<Map<K, V>> {
+public class MapProcessor<K, V> extends AbstractResultProcessor<Map<K, V>> {
 	private final SingleRecordProcessor<K> keyProcessor;
 	private final SingleRecordProcessor<V> valueProcessor;
 
@@ -37,7 +37,7 @@ public class MapResultProcessor<K, V> extends AbstractResultProcessor<Map<K, V>>
 	 * @param keyProcessor
 	 * @param valueProcessor
 	 */
-	public MapResultProcessor(final SingleRecordProcessor<K> keyProcessor,
+	public MapProcessor(final SingleRecordProcessor<K> keyProcessor,
 	        final SingleRecordProcessor<V> valueProcessor) {
 		super();
 		this.keyProcessor = keyProcessor;

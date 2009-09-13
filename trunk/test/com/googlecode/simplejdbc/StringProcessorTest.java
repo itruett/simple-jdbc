@@ -22,9 +22,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 /**
- * Tests {@link SingleDoubleProcessor}.
+ * Tests {@link StringProcessor}.
  */
-public class SingleDoubleProcessorTest extends SimpleJdbcTest {
+public class StringProcessorTest extends SimpleJdbcTest {
 	/**
 	 * Tests processing an empty result set.
 	 * 
@@ -32,8 +32,8 @@ public class SingleDoubleProcessorTest extends SimpleJdbcTest {
 	 */
 	@Test
 	public void testProcessEmptyResultSet() throws SQLException {
-		final QueryResult<Double> result = runner.query("", new Object[0],
-		        new SingleDoubleProcessor("value"));
+		final QueryResult<String> result = runner.query("", new Object[0], new StringProcessor(
+		        "value"));
 
 		Assert.assertNotNull(result);
 		Assert.assertNull(result.getValue());
@@ -47,11 +47,13 @@ public class SingleDoubleProcessorTest extends SimpleJdbcTest {
 	 */
 	@Test
 	public void testProcessResultSet() throws SQLException {
-		final Double expectedValue = Double.valueOf(3.14);
+		final String expectedValue = "foo";
 		testDataSource.setResultValue(0, "value", expectedValue);
+		testDataSource.setResultValue(1, "value", "bar");
+		testDataSource.setResultValue(2, "value", "more");
 
-		final QueryResult<Double> result = runner.query("", new Object[0],
-		        new SingleDoubleProcessor("value"));
+		final QueryResult<String> result = runner.query("", new Object[0], new StringProcessor(
+		        "value"));
 
 		Assert.assertNotNull(result);
 		Assert.assertEquals(expectedValue, result.getValue());

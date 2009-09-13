@@ -38,8 +38,8 @@ public class MapResultProcessorTest extends SimpleJdbcTest {
 		testDataSource.setResultValue(1, "key", Integer.valueOf(2));
 		testDataSource.setResultValue(1, "value", "B");
 
-		final MapResultProcessor<Integer, String> processor = new MapResultProcessor<Integer, String>(
-		        new SingleIntegerProcessor("key"), new SingleStringProcessor("value"));
+		final MapProcessor<Integer, String> processor = new MapProcessor<Integer, String>(
+		        new IntegerProcessor("key"), new StringProcessor("value"));
 
 		final QueryResult<Map<Integer, String>> queryResult = runner.query("", new Object[0],
 		        processor);

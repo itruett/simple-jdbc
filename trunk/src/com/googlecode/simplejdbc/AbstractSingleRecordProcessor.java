@@ -106,4 +106,14 @@ public abstract class AbstractSingleRecordProcessor<T> extends AbstractResultPro
 	        throws SQLException {
 		return Boolean.valueOf(resultSet.getBoolean(columnNamePrefix + columnName));
 	}
+
+	/**
+	 * Returns a {@link ListProcessor} that will apply this processor to each row in the result set.
+	 * 
+	 * @return a {@link ListProcessor} that will apply this processor to each row in the result set
+	 */
+	public ListProcessor<T> getListProcessor() {
+		return new ListProcessor<T>(this);
+	}
+
 }

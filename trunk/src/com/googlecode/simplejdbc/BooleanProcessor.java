@@ -21,7 +21,7 @@ import java.sql.SQLException;
 /**
  * Produces a single {@link Boolean} value from a {@link ResultSet}.
  */
-public class SingleBooleanProcessor extends AbstractSingleRecordProcessor<Boolean> {
+public class BooleanProcessor extends AbstractSingleRecordProcessor<Boolean> {
 	private final String columnName;
 
 	/**
@@ -30,7 +30,7 @@ public class SingleBooleanProcessor extends AbstractSingleRecordProcessor<Boolea
 	 * @param columnNamePrefix
 	 * @param columnName
 	 */
-	public SingleBooleanProcessor(final String columnNamePrefix, final String columnName) {
+	public BooleanProcessor(final String columnNamePrefix, final String columnName) {
 		super(columnNamePrefix);
 		this.columnName = columnName;
 	}
@@ -40,7 +40,7 @@ public class SingleBooleanProcessor extends AbstractSingleRecordProcessor<Boolea
 	 * 
 	 * @param columnName
 	 */
-	public SingleBooleanProcessor(final String columnName) {
+	public BooleanProcessor(final String columnName) {
 		this("", columnName);
 	}
 

@@ -21,7 +21,7 @@ import java.sql.SQLException;
 /**
  * Produces a single {@link String} value from a {@link ResultSet}.
  */
-public class SingleStringProcessor extends AbstractSingleRecordProcessor<String> {
+public class StringProcessor extends AbstractSingleRecordProcessor<String> {
 	private final String columnName;
 
 	/**
@@ -30,7 +30,7 @@ public class SingleStringProcessor extends AbstractSingleRecordProcessor<String>
 	 * @param columnNamePrefix
 	 * @param columnName
 	 */
-	public SingleStringProcessor(final String columnNamePrefix, final String columnName) {
+	public StringProcessor(final String columnNamePrefix, final String columnName) {
 		super(columnNamePrefix);
 		this.columnName = columnName;
 	}
@@ -40,7 +40,7 @@ public class SingleStringProcessor extends AbstractSingleRecordProcessor<String>
 	 * 
 	 * @param columnName
 	 */
-	public SingleStringProcessor(final String columnName) {
+	public StringProcessor(final String columnName) {
 		this("", columnName);
 	}
 

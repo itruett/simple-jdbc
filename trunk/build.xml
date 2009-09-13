@@ -16,13 +16,17 @@
 <project name="SimpleJDBC" default="emma-test">
 	<property name="build.props.file" value="build.properties" />
 	<property file="${build.props.file}" />
-	
-	<property name="src.dir" value="${basedir}/src" />
-	<property name="out.dir" value="${basedir}/bin" />
 
-	<target name="emma-init">
+	<target name="env-init">
+		<property name="build.dir" value="${basedir}/build" />
+		<property name="src.dir" value="${basedir}/src" />
+	</target>
+			
+	<target name="emma-init" depends="env-init">
+		<property name="bin.dir" value="${basedir}/bin" />
 		<property name="emma.dir" value="${basedir}/lib" />
-
+		<property name="coverage.dir" value="${build.dir}/coverage" />
+		
 		<path id="emma.lib">
 			<pathelement location="${emma.dir}/emma.jar" />
 			<pathelement location="${emma.dir}/emma_ant.jar" />
@@ -30,35 +34,97 @@
 
 		<taskdef resource="emma_ant.properties" classpathref="emma.lib" />
 	</target>
-	
-	<target name="junit-init">
+
+	<target name="junit-init" depends="env-init">
 		<fail unless="junit.jar" message="junit.jar must be set on the command line or in ${build.props.file}" />
 		<fail unless="hamcrest.jar" message="hamcrest.jar must be set on the command line or in ${build.props.file}" />
-		<mkdir dir="${out.dir}" />
-		<path id="run.classpath">
-			<pathelement location="${out.dir}" />
+		<mkdir dir="${bin.dir}" />
+		<path id="junit.classpath">
+			<pathelement location="${bin.dir}" />
 			<pathelement location="${junit.jar}" />
 			<pathelement location="${hamcrest.jar}" />
 		</path>
 	</target>
 
-	<target name="emma-test" depends="emma-init,junit-init">
+	<target name="emma-test" depends="emma-init,junit-init,compile-test">
 		<emmajava enabled="true" 
 				libclasspathref="emma.lib" 
 				classname="org.junit.runner.JUnitCore" 
-				classpathref="run.classpath" sourcepath="${src.dir}">
+				classpathref="junit.classpath" 
+				sourcepath="${src.dir}">
 			<filter value="com.googlecode.simplejdbc.*"/>
 			<filter excludes="com.googlecode.simplejdbc.*Test*" />
-			<html />
+			<html outfile="${coverage.dir}/index.html" />
 			<jvmarg line="-ea" />
 			<arg line="com.googlecode.simplejdbc.SimpleJdbcTestSuite"/>
 		</emmajava>
 	</target>
+
+	<target name="javadoc-init" depends="env-init">
+		<property name="javadoc.dir" value="${build.dir}/javadoc" />
+	</target>
 	
-	<target name="javadoc">
-		<javadoc access="protected" classpath="${out.dir}" verbose="true" destdir="javadoc">
+	<target name="javadoc" depends="javadoc-init">
+		<javadoc access="protected" classpath="${bin.dir}" verbose="true" destdir="${javadoc.dir}">
 			<link href="http://java.sun.com/javase/7/docs/api/" />
 			<sourcepath location="${src.dir}" />
 		</javadoc>
+	</target>
+
+	<target name="compile-init" depends="env-init">
+		<property name="javac.source" value="1.6" />
+		<property name="javac.target" value="1.6" />
+		<property name="javac.optimize" value="true" />
+		<property name="javac.debug" value="false" />
+	</target>
+	
+	<target name="compile-src" depends="compile-init">
+		<mkdir dir="${bin.dir}" /> 
+		<javac 
+				source="${javac.source}" 
+				target="${javac.target}" 
+				srcdir="${src.dir}" 
+				debug="${javac.debug}"
+				optimize="${javac.optimize}" 
+				failonerror="true"
+				destdir="${bin.dir}" />
+	</target>
+
+	<target name="compile-test-init">
+		<property name="test.dir" value="${basedir}/test" />
+		<property name="javac.debug" value="true" />
+	</target>
+
+	<target name="compile-test" depends="compile-test-init,compile-init,compile-src">
+		<mkdir dir="${bin.dir}" /> 
+		<javac 
+				source="${javac.source}" 
+				target="${javac.target}" 
+				srcdir="${test.dir}"
+				classpathref="junit.classpath"
+				debug="${javac.debug}"
+				optimize="${javac.optimize}" 
+				failonerror="true"
+				destdir="${bin.dir}" />
+	</target>
+
+	<target name="jar-init" depends="env-init,javadoc-init">
+		<property name="bin.dir" value="${build.dir}/bin" />
+		<property name="jar.file" value="${build.dir}/simple-jdbc.jar" />
+	</target>
+
+	<target name="jar" depends="jar-init,compile-src,javadoc">
+		<jar destfile="${jar.file}" compress="true" update="false">
+			<zipfileset dir="${bin.dir}" />
+			<zipfileset dir="${javadoc.dir}" prefix="doc/api"/>
+			<zipfileset dir="${src.dir}" />
+		</jar>
+	</target>
+
+	<target name="clean" depends="compile-init,javadoc-init,emma-init">
+		<delete dir="${bin.dir}" />
+		<delete dir="${coverage.dir}" />
+		<delete dir="${javadoc.dir}" />
+		<delete dir="${build.dir}" />
 	</target>
 </project>
