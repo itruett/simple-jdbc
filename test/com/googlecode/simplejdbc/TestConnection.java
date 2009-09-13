@@ -298,6 +298,7 @@ public class TestConnection implements Connection {
 	 */
 	@Override
 	public PreparedStatement prepareStatement(String sql) throws SQLException {
+		testPreparedStatement.setThrowException(sql.equals("exception"));
 		return testPreparedStatement;
 	}
 

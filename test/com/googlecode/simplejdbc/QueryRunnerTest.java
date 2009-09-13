@@ -151,4 +151,46 @@ public class QueryRunnerTest extends SimpleJdbcTest {
 		Assert.assertTrue(testDataSource.isExecuteUpdateCalled());
 		Assert.assertEquals(true, runner.isConnectionClosed());
 	}
+
+	/**
+	 * Tests that the connection is closed if a SQLException is thrown.
+	 * 
+	 * @throws SQLException
+	 */
+	@Test
+	public void testQueryException() throws SQLException {
+		final ResultProcessor<String> testProcessor = new ResultProcessor<String>() {
+			@Override
+			public QueryResult<String> processResultSet(final ResultSet resultSet)
+			        throws SQLException {
+				throw new SQLException();
+			}
+		};
+
+		try {
+			runner.query("", new Object[0], testProcessor);
+			Assert.fail("Expected SQLException.");
+		} catch (SQLException e) {
+			// Expected exception.
+		}
+
+		Assert.assertEquals(true, runner.isConnectionClosed());
+	}
+
+	/**
+	 * Tests that the connection is closed if a SQLException is thrown.
+	 * 
+	 * @throws SQLException
+	 */
+	@Test
+	public void testUpdateException() throws SQLException {
+		try {
+			runner.update("exception", new Object[0]);
+			Assert.fail("Expected SQLException.");
+		} catch (SQLException e) {
+			// Expected exception.
+		}
+
+		Assert.assertEquals(true, runner.isConnectionClosed());
+	}
 }
