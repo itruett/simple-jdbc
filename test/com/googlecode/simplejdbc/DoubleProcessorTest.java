@@ -22,9 +22,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 /**
- * Tests {@link SingleBooleanProcessor}.
+ * Tests {@link DoubleProcessor}.
  */
-public class SingleBooleanProcessorTest extends SimpleJdbcTest {
+public class DoubleProcessorTest extends SimpleJdbcTest {
 	/**
 	 * Tests processing an empty result set.
 	 * 
@@ -32,8 +32,8 @@ public class SingleBooleanProcessorTest extends SimpleJdbcTest {
 	 */
 	@Test
 	public void testProcessEmptyResultSet() throws SQLException {
-		final QueryResult<Boolean> result = runner.query("", new Object[0],
-		        new SingleBooleanProcessor("value"));
+		final QueryResult<Double> result = runner.query("", new Object[0], new DoubleProcessor(
+		        "value"));
 
 		Assert.assertNotNull(result);
 		Assert.assertNull(result.getValue());
@@ -47,11 +47,11 @@ public class SingleBooleanProcessorTest extends SimpleJdbcTest {
 	 */
 	@Test
 	public void testProcessResultSet() throws SQLException {
-		final Boolean expectedValue = Boolean.TRUE;
+		final Double expectedValue = Double.valueOf(3.14);
 		testDataSource.setResultValue(0, "value", expectedValue);
 
-		final QueryResult<Boolean> result = runner.query("", new Object[0],
-		        new SingleBooleanProcessor("value"));
+		final QueryResult<Double> result = runner.query("", new Object[0], new DoubleProcessor(
+		        "value"));
 
 		Assert.assertNotNull(result);
 		Assert.assertEquals(expectedValue, result.getValue());

@@ -19,28 +19,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Produces a single {@link Double} value from a {@link ResultSet}.
+ * Produces a single {@link Integer} value from a {@link ResultSet}.
  */
-public class SingleDoubleProcessor extends AbstractSingleRecordProcessor<Double> {
+public class IntegerProcessor extends AbstractSingleRecordProcessor<Integer> {
 	private final String columnName;
 
 	/**
-	 * Creates a new SingleDoubleProcessor.
+	 * Creates a new SingleIntegerProcessor.
 	 * 
 	 * @param columnNamePrefix
 	 * @param columnName
 	 */
-	public SingleDoubleProcessor(final String columnNamePrefix, final String columnName) {
+	public IntegerProcessor(final String columnNamePrefix, final String columnName) {
 		super(columnNamePrefix);
 		this.columnName = columnName;
 	}
 
 	/**
-	 * Creates a new SingleDoubleProcessor.
+	 * Creates a new SingleIntegerProcessor.
 	 * 
 	 * @param columnName
 	 */
-	public SingleDoubleProcessor(final String columnName) {
+	public IntegerProcessor(final String columnName) {
 		this("", columnName);
 	}
 
@@ -48,7 +48,7 @@ public class SingleDoubleProcessor extends AbstractSingleRecordProcessor<Double>
 	 * @see com.googlecode.simplejdbc.SingleRecordProcessor#processRow(java.sql.ResultSet)
 	 */
 	@Override
-	public Double processRow(final ResultSet resultSet) throws SQLException {
-		return getDouble(resultSet, columnName);
+	public Integer processRow(final ResultSet resultSet) throws SQLException {
+		return getInteger(resultSet, columnName);
 	}
 }

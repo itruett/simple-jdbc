@@ -23,9 +23,14 @@ import org.junit.runners.Suite.SuiteClasses;
  * Suite of tests for SimpleJDBC.
  */
 @RunWith(Suite.class)
-@SuiteClasses( { MapResultProcessorTest.class, QueryRunnerTest.class,
-        SingleBooleanProcessorTest.class, SingleDoubleProcessorTest.class,
-        SingleStringProcessorTest.class })
+@SuiteClasses( { 
+		BooleanProcessorTest.class,
+		DoubleProcessorTest.class, 
+		ListProcessorTest.class,
+		MapResultProcessorTest.class, 
+		QueryRunnerTest.class, 
+        StringProcessorTest.class
+        })
 public class SimpleJdbcTestSuite {
 	// No code required here.
 }

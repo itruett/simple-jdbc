@@ -22,9 +22,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 /**
- * Tests {@link SingleStringProcessor}.
+ * Tests {@link BooleanProcessor}.
  */
-public class SingleStringProcessorTest extends SimpleJdbcTest {
+public class BooleanProcessorTest extends SimpleJdbcTest {
 	/**
 	 * Tests processing an empty result set.
 	 * 
@@ -32,8 +32,8 @@ public class SingleStringProcessorTest extends SimpleJdbcTest {
 	 */
 	@Test
 	public void testProcessEmptyResultSet() throws SQLException {
-		final QueryResult<String> result = runner.query("", new Object[0],
-		        new SingleStringProcessor("value"));
+		final QueryResult<Boolean> result = runner.query("", new Object[0], new BooleanProcessor(
+		        "value"));
 
 		Assert.assertNotNull(result);
 		Assert.assertNull(result.getValue());
@@ -47,13 +47,11 @@ public class SingleStringProcessorTest extends SimpleJdbcTest {
 	 */
 	@Test
 	public void testProcessResultSet() throws SQLException {
-		final String expectedValue = "foo";
+		final Boolean expectedValue = Boolean.TRUE;
 		testDataSource.setResultValue(0, "value", expectedValue);
-		testDataSource.setResultValue(1, "value", "bar");
-		testDataSource.setResultValue(2, "value", "more");
 
-		final QueryResult<String> result = runner.query("", new Object[0],
-		        new SingleStringProcessor("value"));
+		final QueryResult<Boolean> result = runner.query("", new Object[0], new BooleanProcessor(
+		        "value"));
 
 		Assert.assertNotNull(result);
 		Assert.assertEquals(expectedValue, result.getValue());
